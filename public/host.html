@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<title>Laser Arena</title>
+<link rel="stylesheet" href="/app.css">
+<script type="importmap">
+  { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+</script>
+</head>
+<body class="tv at-lobby">
+  <div id="stage"></div>
+
+  <header class="tv-top">
+    <div id="roundBox" class="tv-round glass"><div class="k" id="roundK">Lobby</div><div class="v" id="round">Join now</div></div>
+    <div id="clockBox" class="tv-clock glass hidden"><div id="timer" class="v"></div><div id="phaseLabel" class="k"></div></div>
+    <ol id="log" class="tv-log"></ol>
+  </header>
+
+  <aside id="roster" class="tv-roster"></aside>
+
+  <section id="lobbyWrap" class="tv-lobby glass">
+    <div>
+      <div class="tv-logo">LASER <span>ARENA</span></div>
+      <div class="tv-sub">Move · Aim · Reveal</div>
+    </div>
+    <div class="tv-join">
+      <div id="qr" class="tv-qr"></div>
+      <div class="tv-code">
+        <div class="k">ROOM CODE</div>
+        <div id="code" class="v">····</div>
+        <div id="url" class="u"></div>
+      </div>
+    </div>
+    <ol class="tv-steps">
+      <li><b>Join</b> — scan the code with your phone and pick a name</li>
+      <li><b>Host</b> — the first player in is the host: add bots, then start</li>
+      <li><b>Play</b> — 7 s to move &amp; aim in secret, then everyone fires</li>
+    </ol>
+    <div class="tv-list-head"><span>Fighters</span><span id="lobbyCount">0 / 8</span></div>
+    <div id="lobbyRoster" class="tv-list"></div>
+    <div id="lobbyHint" class="tv-hint"></div>
+    <div class="tv-lobby-actions">
+      <button id="tvStart" class="btn primary" type="button">Start match</button>
+      <button id="tvAddBot" class="btn" type="button">+ Bot</button>
+      <button id="tvJoinHere" class="btn" type="button">Join on this screen</button>
+    </div>
+    <button id="tvNewRoom" class="btn tv-newroom">New room</button>
+  </section>
+
+  <!-- Small toolbar (top-left, under the round box): open the menu, sound on/off. -->
+  <div class="tv-tools">
+    <button id="menuBtn" class="tool-btn glass" type="button" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+    <button id="soundBtn" class="tool-btn glass off" type="button" aria-label="Sound"><svg viewBox="0 0 24 24"><path class="spk" d="M4 9h4l5-4v14l-5-4H4z"/><path class="waves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="cross" d="M16 9l6 6M22 9l-6 6"/></svg><span id="soundLabel">Sound off</span></button>
+    <button id="tvLeaveMatch" class="tool-btn glass hidden" type="button"><svg viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/></svg><span>Leave match</span></button>
+    <button id="tvEndMatch" class="tool-btn glass hidden" type="button"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg><span>End match</span></button>
+  </div>
+
+  <!-- Intro / pause menu -->
+  <section id="menu" class="menu" aria-label="Game menu">
+    <div class="menu-top">
+      <div class="menu-sys"><span class="led"></span><span id="mSync">SYS.SYNC: — FPS // LATENCY — MS</span></div>
+      <div class="menu-top-right">
+        <span id="mRoom" class="m-chip">ROOM ····</span>
+        <span id="mPlayers" class="m-chip">0/8 FIGHTERS</span>
+        <span class="m-mode">MODE: CAGE TACTICAL</span>
+        <span id="mOnline" class="m-badge">CONNECTING</span>
+      </div>
+    </div>
+
+    <div id="menuMain" class="menu-panel" data-view="main">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="menu-head"><span>TACTICAL COMBAT INTERFACE</span><span class="m-pill"><i></i>8-P CAGE MATCH</span></div>
+      <h1 class="menu-title">LASER<br><span>ARENA</span></h1>
+      <div class="menu-sub">HEX PROTOCOL // <b>STAGE: PERFORATED RING</b></div>
+
+      <button class="menu-primary menu-item" data-act="enter">
+        <span><b>ENTER ARENA <em>&#9654;</em></b><small id="mEnterSub">OPEN THE LOBBY // PLAYERS SCAN TO JOIN</small></span><span id="mActive" class="m-tag dark">0 ACTIVE</span>
+        <svg viewBox="0 0 24 24"><path d="M5 19l6-6M11 13l2-6 6-2-2 6-6 2zM14 10l1 1"/></svg>
+      </button>
+      <button class="menu-item" data-act="quick">
+        <svg viewBox="0 0 24 24"><path d="M4 20l7-7M13 11l7-7M14 4h6v6M4 4l16 16"/></svg>
+        <span><b>QUICK MATCH</b><small>PLAY ON THIS TV // VS 3 BOTS</small></span><kbd>F1</kbd>
+      </button>
+      <button class="menu-item" data-act="locker">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/></svg>
+        <span><b>CUSTOMISE FIGHTER</b><small>YOUR NAME, SUIT, HEADGEAR &amp; LASER COLOUR</small></span><i class="m-dot"></i>
+      </button>
+      <div class="menu-row">
+        <button class="menu-item small" data-act="settings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8M14 5v4M8 15v4"/></svg><b>SETTINGS</b></button>
+        <button class="menu-item small" data-act="terminate"><svg viewBox="0 0 24 24"><path d="M12 3v8M6.5 6.5a8 8 0 1 0 11 0"/></svg><b>TERMINATE</b></button>
+      </div>
+      <div class="menu-foot"><span id="mVoice">VOICE CHAT // PHONE MIC</span><span id="mSeed">ROOM // ····</span></div>
+    </div>
+
+    <div id="menuLocker" class="menu-panel locker hidden" data-view="locker">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="menu-head"><span>CUSTOMISE FIGHTER</span><span class="m-pill"><i></i>PLAYS ON THIS SCREEN</span></div>
+      <p class="lk-intro">Set up the fighter you play with on this screen. Every choice saves automatically &mdash; the fighter on the right updates as you pick.</p>
+      <div class="lk-step"><span class="lk-n">1</span><span class="lk-t">Your name</span></div>
+      <input id="lkName" class="lk-input" maxlength="12" value="TV" aria-label="Your name" placeholder="TYPE YOUR NAME">
+      <div class="lk-step"><span class="lk-n">2</span><span class="lk-t">Suit</span><span id="lkSkinName" class="lk-val"></span></div>
+      <div id="lkSkins" class="lk-skins"></div>
+      <div class="lk-step"><span class="lk-n">3</span><span class="lk-t">Headgear</span></div>
+      <div id="lkGear" class="lk-chips"></div>
+      <div class="lk-step"><span class="lk-n">4</span><span class="lk-t">Team colour</span><span class="lk-val">One per player</span></div>
+      <div id="lkColor" class="lk-swatches"></div>
+      <div class="lk-step"><span class="lk-n">5</span><span class="lk-t">Laser colour</span><span id="lkLaserName" class="lk-val"></span></div>
+      <div id="lkLaser" class="lk-swatches lasers"></div>
+      <div class="menu-row">
+        <button class="menu-item small" data-act="back"><b>&#9664; BACK</b></button>
+        <button class="menu-item small primary" data-act="lockerPlay"><b>PLAY WITH THIS FIGHTER</b></button>
+      </div>
+      <div class="menu-foot"><span>PHONE PLAYERS: TAP CUSTOMISE IN THE PHONE LOBBY</span><span id="lkHint">SAVED</span></div>
+    </div>
+    <div id="lkSummary" class="lk-summary hidden"><div id="lkSumName" class="n">TV</div><div id="lkSumSub" class="s"></div></div>
+
+    <div id="menuSettings" class="menu-panel hidden" data-view="settings">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="menu-head"><span>SETTINGS</span><span class="m-pill"><i></i>SYSTEM</span></div>
+      <button class="menu-item" data-act="setSound"><span><b>SOUND</b><small>MUSIC-FREE SFX // LASER, COUNTDOWN, TENSION</small></span><span id="sSound" class="m-tag">OFF</span></button>
+      <button class="menu-item" data-act="setQuality"><span><b>GRAPHICS</b><small>AUTO STEPS DOWN ON A SLOW TV</small></span><span id="sQuality" class="m-tag">AUTO</span></button>
+      <button class="menu-item" data-act="setFps"><span><b>FPS COUNTER</b><small>SHOW FRAME RATE IN THE CORNER</small></span><span id="sFps" class="m-tag">OFF</span></button>
+      <button class="menu-item" data-act="fullscreen"><span><b>FULLSCREEN</b><small>OR PRESS F11</small></span><kbd>F11</kbd></button>
+      <button class="menu-item" data-act="leaveTv"><span><b>TV PLAYER</b><small id="sTvSub">NOT PLAYING</small></span><span id="sTv" class="m-tag dim">—</span></button>
+      <div class="menu-help">CONTROLS ON THIS SCREEN // LAPTOP: WASD MOVE · ARROW KEYS OR MOUSE AIM · FIRE TV REMOTE: D-PAD MOVES, OK TURNS AIM · GAMEPAD: LEFT STICK MOVE, RIGHT STICK AIM</div>
+      <div class="menu-row"><button class="menu-item small" data-act="back"><b>&#9664; BACK</b></button></div>
+    </div>
+
+    <div class="menu-bottom">
+      <span>LASER ARENA PROTOCOL // BUILD 2026.10 // <em>THREE.JS ENGINE · HARDWARE ACCELERATED</em></span>
+      <span class="keys"><kbd>ESC</kbd> MENU <kbd class="hot">SPACE</kbd> DEPLOY <kbd>F11</kbd> FULLSCREEN <kbd>M</kbd> SOUND</span>
+    </div>
+  </section>
+  <div id="fpsBox" class="fps-box hidden"></div>
+  <div id="tvNotice" class="tv-notice glass hidden" role="status"></div>
+  <div id="staleBar" class="tv-stale hidden" role="alert">Game code was updated — restart the server (Ctrl+C, then <b>npm start</b>) and reload this page</div>
+
+  <section id="banner" class="tv-banner hidden"><div id="bannerTitle" class="t"></div><div id="bannerSub" class="s"></div></section>
+
+  <section id="over" class="tv-over glass" aria-hidden="true">
+    <div id="overK" class="k">CHAMPION</div>
+    <div id="winner" class="winner"></div>
+    <div id="standings" class="standings"></div>
+    <div class="over-actions">
+      <button id="tvRematch" class="btn primary">Rematch</button>
+      <button id="tvLobby" class="btn">Back to lobby</button>
+    </div>
+    <div id="overNext" class="next"></div>
+  </section>
+
+  <div id="nogl" class="tv-error hidden" role="alert"></div>
+
+  <script type="module" src="/host.js"></script>
+</body>
+</html>

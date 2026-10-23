@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Laser Arena · Controller</title>
+<link rel="stylesheet" href="/app.css">
+<script type="importmap">
+  { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+</script>
+</head>
+<body class="phone">
+  <!-- Join: pick name + look once -->
+  <section id="joinView" class="join">
+    <div class="join-card glass">
+      <div class="join-title"><div class="l">LASER <span>ARENA</span></div><div class="s">PHONE CONTROLLER</div></div>
+      <div id="joinPreview" class="look-preview" aria-label="Your fighter"></div>
+      <div class="field-row">
+        <div class="field"><label for="name">Name</label><input id="name" maxlength="10" autocomplete="off" placeholder="YOU"></div>
+        <div class="field"><label for="room">Room</label><input id="room" maxlength="4" autocomplete="off" placeholder="CODE"></div>
+      </div>
+      <div><div class="pick-label">Team color</div><div id="colorPick" class="swatches"></div></div>
+      <div><div class="pick-label">Suit</div><div id="skinPick" class="skins"></div></div>
+      <div><div class="pick-label">Gear</div><div id="outfitPick" class="chips"></div></div>
+      <div><div class="pick-label">Laser</div><div id="laserPick" class="swatches lasers"></div></div>
+      <button id="joinBtn" class="btn primary">Join the fight</button>
+      <div id="joinErr" class="join-err"></div>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="gameView" class="game hidden">
+    <div id="board3d" class="game-3d"></div>
+    <div id="deadFlash" class="dead-flash hidden"></div>
+    <div class="game-ui">
+      <div class="top">
+        <div class="me glass"><span id="dot" class="dot"></span><span id="me" class="name"></span><span id="hostTag" class="tag host hidden">Host</span><span id="myPts" class="pts">0</span></div>
+        <div id="clock" class="clock glass hidden"></div>
+        <button id="soundChip" class="sound-chip glass off" type="button" aria-label="Sound"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="waves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="cross" d="M16 9l6 6M22 9l-6 6"/></svg><span id="soundChipLabel">Off</span></button>
+        <div id="phasePill" class="phase-pill glass"></div>
+      </div>
+      <div id="status" class="status glass"></div>
+      <!-- During a match: walk out (forfeit), or — host only — end the match for everyone -->
+      <div id="matchActions" class="match-actions hidden">
+        <button id="cLeave" class="mini-btn danger" type="button">Leave match</button>
+        <button id="cEnd" class="mini-btn" type="button">End match</button>
+      </div>
+      <div class="spacer"></div>
+
+      <!-- Lobby: roster + host controls -->
+      <div id="lobbySheet" class="sheet glass hidden">
+        <div class="sheet-head"><span>Fighters</span><button id="cCustom" class="mini-btn" type="button">Customise</button><span id="lobbyCount"></span></div>
+        <div id="lobbyList" class="sheet-list"></div>
+        <div id="hostActions" class="sheet-actions hidden">
+          <button id="cAddBot" class="btn">+ Bot</button>
+          <button id="cStart" class="btn primary">Start match</button>
+        </div>
+        <div id="waitHost" class="sheet-wait hidden"></div>
+      </div>
+
+      <!-- Lobby: change your look and laser colour -->
+      <div id="customSheet" class="custom-sheet glass hidden" role="dialog" aria-label="Customise">
+        <div class="sheet-head"><span>Customise</span></div>
+        <div id="customPreview" class="look-preview" aria-label="Your fighter"></div>
+        <div><div class="pick-label">Team color</div><div id="cColorPick" class="swatches"></div></div>
+        <div><div class="pick-label">Suit</div><div id="cSkinPick" class="skins"></div></div>
+        <div><div class="pick-label">Gear</div><div id="cOutfitPick" class="chips"></div></div>
+        <div><div class="pick-label">Laser</div><div id="cLaserPick" class="swatches lasers"></div></div>
+        <button id="cCustomDone" class="btn primary" type="button">Done</button>
+      </div>
+
+      <!-- Match over -->
+      <div id="resultCard" class="result glass hidden">
+        <div id="resultK" class="k">CHAMPION</div>
+        <div id="resultWinner" class="w"></div>
+        <div id="resultScores" class="result-scores"></div>
+        <div id="resultActions" class="result-actions hidden">
+          <button id="cRematch" class="btn primary">Rematch</button>
+          <button id="cLobby" class="btn">Lobby</button>
+        </div>
+        <div id="resultWait" class="sheet-wait hidden"></div>
+      </div>
+
+      <button id="micBtn" class="mic-btn glass" type="button" aria-label="Microphone">Mic</button>
+
+      <div id="sticksWrap" class="sticks-wrap">
+        <div id="controls" class="sticks">
+          <div class="stick" id="moveStick"><canvas></canvas><span class="lbl">MOVE</span></div>
+          <div class="stick" id="aimStick"><canvas></canvas><span class="lbl">AIM</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="/play.js"></script>
+</body>
+</html>

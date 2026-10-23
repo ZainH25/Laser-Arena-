@@ -1,0 +1,19 @@
+{
+  "name": "laser-arena-cage",
+  "version": "1.0.0",
+  "description": "Laser Arena: Cage Edition — hidden-move laser showdown for TV/browser with phone controllers",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "qrcode": "1.5.4",
+    "three": "0.160.0",
+    "ws": "8.18.0"
+  }
+}

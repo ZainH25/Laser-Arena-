@@ -1,0 +1,326 @@
+/* Overlay UI — minimal chips so the Three.js arena stays the hero (TV + phone). */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --ui-font: 'Rajdhani', system-ui, sans-serif;
+  --ui-glass: rgba(8, 10, 14, 0.52);
+  --ui-border: rgba(255, 255, 255, 0.14);
+  --ui-accent: #d4ff28;
+}
+
+body.host,
+body.phone-body {
+  font-family: var(--ui-font);
+}
+
+.hud-minimal .big {
+  font-size: clamp(22px, 4.2vh, 44px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hud-minimal .dim {
+  font-size: clamp(13px, 2vh, 18px);
+  letter-spacing: 0.06em;
+}
+
+.hud-minimal .timer {
+  font-size: clamp(52px, 10vh, 110px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 40px rgba(212, 255, 40, 0.15), 0 4px 16px rgba(0, 0, 0, 0.85);
+}
+
+.hud-minimal .phase {
+  font-size: clamp(10px, 1.8vh, 16px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+body.host.at-lobby .hud-left {
+  opacity: 0.85;
+}
+
+body.host.in-match .hud-left .big,
+body.host.in-match .hud-center .timer {
+  padding: 0.15em 0.55em;
+  border-radius: 6px;
+  background: var(--ui-glass);
+  border: 1px solid var(--ui-border);
+  backdrop-filter: blur(8px);
+  display: inline-block;
+}
+
+body.host.in-match .hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.roster-minimal .p {
+  padding: 0.28em 0.85em 0.28em 0.65em;
+  border-radius: 4px;
+  border: 1px solid var(--ui-border);
+  border-left-width: 4px;
+  background: var(--ui-glass);
+  backdrop-filter: blur(10px);
+  font-size: clamp(14px, 2.2vh, 20px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lobby-dock .dock-inner {
+  background: rgba(6, 8, 12, 0.62);
+  border: 1px solid var(--ui-border);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.35);
+}
+
+body.host.at-lobby .lobby-dock .dock-sheet {
+  backdrop-filter: blur(16px);
+}
+
+body.host.at-lobby .lobby-dock .dock-actions button {
+  border-radius: 12px;
+  font-family: var(--ui-font);
+  letter-spacing: 0.1em;
+}
+
+.lobby-dock .code {
+  color: var(--ui-accent);
+  text-shadow: 0 0 24px rgba(212, 255, 40, 0.45);
+}
+
+.lobby-dock button {
+  font-family: var(--ui-font);
+  border-radius: 8px;
+  letter-spacing: 0.12em;
+}
+
+.lobby-dock button.primary {
+  background: linear-gradient(180deg, rgba(212, 255, 40, 0.25) 0%, rgba(80, 100, 40, 0.35) 100%);
+  border-color: rgba(212, 255, 40, 0.55);
+  color: #fff;
+}
+
+.game-hud .who,
+.game-hud .clock,
+.game-hud .status {
+  font-family: var(--ui-font);
+  letter-spacing: 0.06em;
+}
+
+.game-hud .clock {
+  padding: 0.1em 0.45em;
+  background: var(--ui-glass);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.join-card {
+  font-family: var(--ui-font);
+  background: rgba(6, 8, 12, 0.78);
+  border: 1px solid var(--ui-border);
+  gap: 14px;
+  padding: clamp(18px, 4vw, 24px);
+}
+
+.join-card h1 {
+  letter-spacing: 0.1em;
+  font-size: clamp(28px, 7vw, 36px);
+}
+
+.join-card .dim {
+  font-size: clamp(13px, 3.2vw, 16px);
+  letter-spacing: 0.14em;
+}
+
+.join-card input {
+  font-family: var(--ui-font);
+  font-size: clamp(20px, 5.5vw, 26px);
+  font-weight: 700;
+  padding: 16px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--ui-border);
+  background: rgba(255, 255, 255, 0.96);
+  color: #111;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.join-card button {
+  font-family: var(--ui-font);
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.join-card button.primary {
+  background: linear-gradient(180deg, rgba(212, 255, 40, 0.22) 0%, rgba(60, 70, 40, 0.4) 100%);
+  border-color: rgba(212, 255, 40, 0.5);
+}
+
+.join-card .err {
+  font-size: clamp(14px, 3.5vw, 17px);
+  min-height: 1.4em;
+}
+
+body.phone-body.in-game .game-hud .who {
+  font-size: clamp(18px, 5vw, 24px);
+  gap: 10px;
+}
+
+body.phone-body.in-game .game-hud .who .dot {
+  width: 16px;
+  height: 16px;
+}
+
+body.phone-body.in-game .game-hud .clock {
+  font-size: clamp(32px, 9vw, 42px);
+}
+
+body.phone-body.in-game .game-hud .status {
+  font-size: clamp(14px, 3.8vw, 18px);
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  padding: 4px 8px;
+}
+
+body.phone-body.in-game .game-controls .stick {
+  width: min(48vw, 210px);
+  touch-action: none;
+}
+
+body.phone-body.in-game .game-controls {
+  touch-action: none;
+}
+
+body.phone-body .join-screen {
+  touch-action: manipulation;
+}
+
+.swatch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+
+.swatch-row.compact {
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: var(--sw, #888);
+  padding: 0;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+.swatch.on {
+  border-color: #d4ff28;
+  box-shadow: 0 0 0 2px rgba(212, 255, 40, 0.45);
+}
+
+.swatch-row.compact .swatch {
+  width: 30px;
+  height: 30px;
+}
+
+.customize-block {
+  margin: 6px 0 2px;
+}
+
+.customize-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+}
+
+.outfit-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 6px 0 2px;
+}
+
+.outfit-chip {
+  flex: 1 1 calc(25% - 8px);
+  min-width: 68px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.outfit-chip.on {
+  border-color: #d4ff28;
+  background: rgba(212, 255, 40, 0.12);
+  transform: translateY(-1px);
+}
+
+.join-fighter {
+  --accent: #ff7043;
+  --laser: #7ed492;
+  position: absolute;
+  inset: 0 0 42%;
+  background:
+    radial-gradient(ellipse 55% 40% at 50% 72%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(80, 100, 120, 0.25), transparent);
+  pointer-events: none;
+}
+
+.join-fighter::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: 4px;
+  height: 38%;
+  transform: translateX(-50%) rotate(-8deg);
+  background: linear-gradient(180deg, var(--laser), transparent);
+  opacity: 0.65;
+  border-radius: 2px;
+  filter: blur(0.5px);
+}
+
+body.phone-body.in-game .game-controls .stick span {
+  font-size: clamp(13px, 3.5vw, 16px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+body.phone-body.in-game .game-controls .buttons button {
+  font-size: clamp(16px, 4.2vw, 20px);
+  padding: 14px 16px;
+}
+
+body.phone-body .join-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 28%, rgba(120, 150, 180, 0.18), transparent 70%);
+  pointer-events: none;
+}
